@@ -6,6 +6,7 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.media.session.MediaSessionManager
 import android.media.session.PlaybackState
+import android.content.ComponentName
 
 class MediaControlService : NotificationListenerService() {
     companion object {
@@ -19,7 +20,9 @@ class MediaControlService : NotificationListenerService() {
         val action = intent?.action ?: return START_NOT_STICKY
         try {
             val manager = getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
-            val sessions = manager.getActiveSessions(componentName)
+val sessions = manager.getActiveSessions(
+    ComponentName(this, MediaControlService::class.java)
+)
             val spotify = sessions.firstOrNull { it.packageName == "com.spotify.music" }
                 ?: sessions.firstOrNull()
             when (action) {
